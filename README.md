@@ -31,4 +31,4 @@ Download this repo, and then run:
 
 `go build -o terrafold ./cmd/cli/main.go`
 
-You need to move or toerhwise assure `terrafold` is in your execution path.
+You need to move or otherwise assure `terrafold` is in your execution path.
