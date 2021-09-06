@@ -23,3 +23,12 @@ The name TerraFold is the playful combination of `Terra`form and Scaf`fold`.
 - scaffold   - takes the named profile json and creates the handlers and iac files. Will not overwrite unless `overwrite` flag in profile is set to true.
 - bumpsemver - will search a named json file for `version`, and increment the patch number.
 - dumptemplates - writes the embedded template files to a folder named `TerrafoldTemplates`.
+
+
+## Installation
+
+Download this repo, and then run:
+
+`go build -o terrafold ./cmd/cli/main.go`
+
+You need to move or toerhwise assure `terrafold` is in your execution path.
