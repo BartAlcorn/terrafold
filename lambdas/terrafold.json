@@ -1,0 +1,16 @@
+{
+  "aws_profile": "aws-zephyr-main:aws-zephyr-main-devops",
+  "aws_account": "026155191598",
+  "stages": [
+    "dev",
+    "qa",
+    "uat",
+    "prod"
+  ],
+  "triggers": [
+    "api",
+    "invoke",
+    "sns",
+    "sqs"
+  ]
+}

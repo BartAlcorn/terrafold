@@ -1,0 +1,27 @@
+{
+  "lambda": {
+    "name": "bart-awesome-lambda",
+    "description": "bart awesome lambda description",
+    "triggers": [
+      "api",
+      "invoke",
+      "sns",
+      "sqs"
+    ],
+    "triggering": {
+      "api": {
+        "path": "/v2/bart/awesome",
+        "method": "GET"
+      },
+      "sns": "bart-awesome-sns",
+      "sqs": "bart-awesome-sqs"
+    },
+    "stages": [
+      "dev",
+      "qa",
+      "uat",
+      "prod"
+    ],
+    "overwrite": true
+  }
+}
