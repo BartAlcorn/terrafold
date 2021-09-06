@@ -1,8 +1,8 @@
 # TerraFold
 
-The goal of Terrafold is to provider a convenience tool to help auto the scaffolding of AWS Lambdas, and their associated Terraform files.
+The goal of Terrafold is to provide a convenience tool to help auto the scaffolding of AWS Lambdas, and their associated Terraform files.
 
-A new lambda can be acheived by creating a simple json file in the repo root or, perfarrably, in the lambda directory root:
+A new lambda can be achieved by creating a simple json file in the repo root or, preferably, in the lambda directory root:
 
 ```json
 {
@@ -13,7 +13,7 @@ A new lambda can be acheived by creating a simple json file in the repo root or,
 }
 ```
 
-This tool is extremely opinionated, by design. It was written for a specific group of developers I work with and as such follows and enforces their particukar appliction structure pattern.
+This tool is extremely opinionated, by design. It was written for a specific group of developers I work with and as such follows and enforces their particular application structure pattern.
 
 The name TerraFold is the playful combination of `Terra`form and Scaf`fold`.
 
