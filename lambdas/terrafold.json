@@ -1,6 +1,6 @@
 {
-  "aws_profile": "aws-zephyr-main:aws-zephyr-main-devops",
-  "aws_account": "026155191598",
+  "aws_profile": "aws-my-main-account:aws-my-main-account-devops",
+  "aws_account": "012345678901",
   "stages": [
     "dev",
     "qa",
