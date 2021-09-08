@@ -6,7 +6,7 @@ module "lambdaAPI" {
   environment          = var.environment
   lambda_bucket_name   = module.constants.lambda_bucket_name
   lambda_function_name = "${var.environment}-${var.app}-api"
-  image_uri            = "${module.constants.aws_account_id}.dkr.ecr.${module.constants.aws_region}.amazonaws.com/${var.app}:0.0.1"
+  image_uri            = "${module.constants.aws_account_id}.dkr.ecr.${module.constants.aws_region}.amazonaws.com/hello-world-api:0.0.1"
   handler              = "/var/task/${var.app}"
   lambda_policy        = data.aws_iam_policy_document.lambda_api_permissions.json
   lambda_timeout       = 30
