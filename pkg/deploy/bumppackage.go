@@ -35,7 +35,7 @@ func BumpPackage(filename string) error {
 		fmt.Println("ERROR Incrementing SemVer", err)
 	}
 
-	fmt.Println("New semver", p.Version)
+	fmt.Println(p.Version)
 
 	pjs, err := json.Marshal(p)
 	if err != nil {

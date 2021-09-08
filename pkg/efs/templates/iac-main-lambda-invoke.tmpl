@@ -1,46 +1,32 @@
-### {{.Trigger}} Lambda ====================================================================
-module "lambda{{.Trigger}}" {
-  source               = "github.com/turnercode/cp-dawg-iac/modules/aws_lambda"
+### INVOKE Lambda ====================================================================
+module "lambdaINVOKE" {
+  source               = "github.com/turnercode/cp-awfm-iac/modules/aws_lambda_container"
   constants            = module.constants
   app                  = var.app
   environment          = var.environment
   lambda_bucket_name   = module.constants.lambda_bucket_name
-  lambda_function_name = "${var.environment}-${var.app}-{{.Trigger}}"
-  lambda_filename      = "../../handler/{{.Trigger}}/lambda.zip" # produced by running gmake
-  lambda_policy        = data.aws_iam_policy_document.lambda_func.json
-  description          = "{{.Description}}"
-  tags                 = merge(var.tags, { environment = var.environment })
+  lambda_function_name = "${var.environment}-${var.app}-invoke"
+  image_uri            = "${module.constants.aws_account_id}.dkr.ecr.${module.constants.aws_region}.amazonaws.com/${var.app}:0.0.1"
+  handler              = "/var/task/${var.app}"
+  lambda_policy        = data.aws_iam_policy_document.lambda_invoke_permissions.json
+  lambda_timeout       = 30
+  description          = "example '${var.app}' container deployment"
+  tags                 = merge(module.constants.tags, { environment = var.environment })
 }
 
-module "sns" {
-  source         = "github.com/turnercode/cp-awfm-iac/modules/aws_sns"
-  constants      = module.constants
-  app            = var.app
-  environment    = var.environment
-  sns_topic_name = "${var.environment}-${var.app}"
-  description    = "{{.Description}}"
-  tags           = var.tags
-}
-
-resource "aws_sns_topic_subscription" "{{.Name}}_lambda_target" {
-  topic_arn = module.sns.sns_arn
-  protocol  = "lambda"
-  endpoint  = module.lambdaSNS.lambda_arn
-}
-
-resource "aws_lambda_permission" "allow_sns_{{.Name}}" {
+resource "aws_lambda_permission" "allow_invoke_{{.Name}}" {
   statement_id  = "AllowExecutionFromSNSZeusMetadata"
   action        = "lambda:InvokeFunction"
-  function_name = module.lambdaSNS.lambda_func.function_name
+  function_name = module.lambdaINVOKE.lambda_func.function_name
   principal     = "sns.amazonaws.com"
   source_arn    = module.sns.sns_arn
 }
 
-data "aws_iam_policy_document" "lambda_func" {
+data "aws_iam_policy_document" "lambda_invoke_permissions" {
   statement {
     # sid       = "AllowInvokingLambdas"
     effect    = "Allow"
-    resources = ["arn:aws:lambda:us-east-1:026155191598:function:${var.environment}-${var.app}-{{.Trigger}}:*"]
+    resources = ["arn:aws:lambda:us-east-1:026155191598:function:${var.environment}-${var.app}-invoke:*"]
     actions   = ["lambda:*"]
   }
 
@@ -55,32 +41,6 @@ data "aws_iam_policy_document" "lambda_func" {
       "secretsmanager:GetSecretValue",
       "secretsmanager:DescribeSecret",
       "secretsmanager:ListSecretVersionIds",
-    ]
-  }
-
-  statement {
-    # sid  = "AllowSNS"
-    effect = "Allow"
-    actions = [
-      "sns:*",
-    ]
-    resources = [
-      module.sns.sns_arn,
-      "arn:aws:sns:us-east-1:277635488776:zeus2-odt-topic-ref",
-      "arn:aws:sns:us-east-1:277635488776:zeus2-odt-topic-prod",
-      "arn:aws:sns:us-east-1:837769064668:odt-${var.environment}-queue_manager_scheduler-sqs"
-    ]
-  }
-
-  statement {
-    effect = "Allow"
-    actions = [
-      "s3:Get*",
-      "s3:List*",
-    ]
-    resources = [
-      "arn:aws:s3:::odt-common-go-cstore",
-      "arn:aws:s3:::odt-common-go-cstore/*",
     ]
   }
 

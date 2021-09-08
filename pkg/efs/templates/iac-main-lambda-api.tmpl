@@ -1,26 +1,28 @@
 ### API Lambda ====================================================================
 module "lambdaAPI" {
-  source               = "github.com/turnercode/cp-dawg-iac/modules/aws_lambda"
+  source               = "github.com/turnercode/cp-awfm-iac/modules/aws_lambda_container"
   constants            = module.constants
   app                  = var.app
   environment          = var.environment
   lambda_bucket_name   = module.constants.lambda_bucket_name
   lambda_function_name = "${var.environment}-${var.app}-api"
-  lambda_filename      = "../../handler/API/lambda.zip" # produced by running gmake
-  lambda_policy        = data.aws_iam_policy_document.lambda_func.json
-  description          = "{{.Description}}"
-  tags                 = merge(var.tags, { environment = var.environment })
+  image_uri            = "${module.constants.aws_account_id}.dkr.ecr.${module.constants.aws_region}.amazonaws.com/${var.app}:0.0.1"
+  handler              = "/var/task/${var.app}"
+  lambda_policy        = data.aws_iam_policy_document.lambda_api_permissions.json
+  lambda_timeout       = 30
+  description          = "example '${var.app}' container deployment"
+  tags                 = merge(module.constants.tags, { environment = var.environment })
 }
 
 resource "aws_lambda_permission" "allow_api_{{.Name}}" {
   statement_id  = "AllowExecutionFromSNSZeusMetadata"
   action        = "lambda:InvokeFunction"
-  function_name = module.lambdaSNS.lambda_func.function_name
+  function_name = module.lambdaAPI.lambda_func.function_name
   principal     = "api.amazonaws.com"
   source_arn    = module.sns.sns_arn
 }
 
-data "aws_iam_policy_document" "lambda_func" {
+data "aws_iam_policy_document" "lambda_api_permissions" {
   statement {
     # sid       = "AllowInvokingLambdas"
     effect    = "Allow"

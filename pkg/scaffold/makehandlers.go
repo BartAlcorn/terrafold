@@ -10,6 +10,7 @@ func MakeHandlers(fldr Folder) {
 
 	for _, t := range fldr.Lambda.Triggers {
 		hpath := fldr.LPath + "/handler/" + t
+		fldr.Lambda.Trigger = t
 		fmt.Printf("Handler for %v...\n", t)
 		Make(hpath, "Dockerfile", "dockerfiletmpl.tmpl", fldr.Lambda, fldr.Lambda.Overwrite)
 		Make(hpath, "Makefile", "makefile.tmpl", fldr.Lambda, fldr.Lambda.Overwrite)

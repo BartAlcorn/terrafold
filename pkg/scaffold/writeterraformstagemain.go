@@ -39,7 +39,7 @@ func WriteTerraformStageMain(fldr Folder) {
 
 		for _, t := range fldr.Lambda.Triggers {
 			fldr.Lambda.Trigger = t
-			ft, err := efs.GetFile("iac-main-lambda-sns.tmpl")
+			ft, err := efs.GetFile("iac-main-lambda-" + t + ".tmpl")
 			if err != nil {
 				fmt.Println("ERROR, Embedded FS: ", err)
 			}

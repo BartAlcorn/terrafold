@@ -1,15 +1,17 @@
-### {{.Trigger}} Lambda ====================================================================
-module "lambda{{.Trigger}}" {
-  source               = "github.com/turnercode/cp-dawg-iac/modules/aws_lambda"
+### SNS Lambda ====================================================================
+module "lambdaSNS" {
+  source               = "github.com/turnercode/cp-awfm-iac/modules/aws_lambda_container"
   constants            = module.constants
   app                  = var.app
   environment          = var.environment
   lambda_bucket_name   = module.constants.lambda_bucket_name
-  lambda_function_name = "${var.environment}-${var.app}-{{.Trigger}}"
-  lambda_filename      = "../../handler/{{.Trigger}}/lambda.zip" # produced by running gmake
-  lambda_policy        = data.aws_iam_policy_document.lambda_func.json
-  description          = "{{.Description}}"
-  tags                 = merge(var.tags, { environment = var.environment })
+  lambda_function_name = "${var.environment}-${var.app}-sns"
+  image_uri            = "${module.constants.aws_account_id}.dkr.ecr.${module.constants.aws_region}.amazonaws.com/${var.app}:0.0.1"
+  handler              = "/var/task/${var.app}"
+  lambda_policy        = data.aws_iam_policy_document.lambda_sns_permissions.json
+  lambda_timeout       = 30
+  description          = "example '${var.app}' container deployment"
+  tags                 = merge(module.constants.tags, { environment = var.environment })
 }
 
 module "sns" {
@@ -36,11 +38,11 @@ resource "aws_lambda_permission" "allow_sns_{{.Name}}" {
   source_arn    = module.sns.sns_arn
 }
 
-data "aws_iam_policy_document" "lambda_func" {
+data "aws_iam_policy_document" "lambda_sns_permissions" {
   statement {
     # sid       = "AllowInvokingLambdas"
     effect    = "Allow"
-    resources = ["arn:aws:lambda:us-east-1:026155191598:function:${var.environment}-${var.app}-{{.Trigger}}:*"]
+    resources = ["arn:aws:lambda:us-east-1:026155191598:function:${var.environment}-${var.app}-sns:*"]
     actions   = ["lambda:*"]
   }
 

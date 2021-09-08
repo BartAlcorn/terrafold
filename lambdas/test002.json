@@ -1,6 +1,6 @@
 {
   "lambda": {
-    "name": "Test002",
-    "description": "this is a test of the scaffolding system"
+    "name": "hello-world",
+    "description": "this is a placekeeper lambda for scaffolding purposes"
   }
 }
