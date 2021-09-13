@@ -37,16 +37,4 @@ push: build
 	@echo "Tagging and Pushing ${PROJECT} v${VERSION}"
 	docker tag ${PROJECT} ${REPO}/${PROJECT}-$(TRIGGER):${VERSION}
 	docker push ${REPO}/${PROJECT}-$(TRIGGER):${VERSION}
-	aws lambda update-function-code --function ${STAGE}-${PROJECT}-$(TRIGGER) --image-uri ${REPO}/${PROJECT}-$(TRIGGER):${VERSION}
-
-deploy:
-	@echo "Deploying ${PROJECT} v${VERSION}"
-	aws lambda update-function-code --function ${STAGE}-${PROJECT}-$(TRIGGER) --image-uri ${REPO}/${PROJECT}-$(TRIGGER):${VERSION}
-
-# deploymultiple:
-# 	@echo ""
-# 	for tgr in $(TRIGGER); do
-# 		#capitalize trigger name (instead of duplicating below)
-# 		TGR=`echo $$tgr | tr a-z A-Z`
-# 		aws lambda update-function-code --function ${STAGE}-${PROJECT}$$tgr --image-uri ${REPO}/${PROJECT}:${VERSION}
-# 	done
+	aws lambda update-function-code --function dev-${PROJECT}-$(TRIGGER) --image-uri ${REPO}/${PROJECT}-$(TRIGGER):${VERSION}

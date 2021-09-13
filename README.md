@@ -29,6 +29,6 @@ The name TerraFold is the playful combination of `Terra`form and Scaf`fold`.
 
 Download this repo, and then run:
 
-`go build -o terrafold ./cmd/cli/main.go`
+`go build -o /usr/local/bin/terrafold ./cmd/cli/main.go`
 
-You need to move or otherwise assure `terrafold` is in your execution path.
+If you do not build directly to `/usr/local/bin`, you need to move or otherwise assure `terrafold` is somewhere in your execution path.
