@@ -12,6 +12,7 @@ func MakeIAC(fldr Folder) {
 		Make(fldr.LPath+"/iac/"+stg, "terraformer.tf", "iac-terraformer.tmpl", ll, ll.Overwrite)
 		Make(fldr.LPath+"/iac/"+stg, "variables.tf", "iac-variables.tmpl", ll, ll.Overwrite)
 		fldr.Lambda.Stage = stg
+		Make(fldr.LPath+"/iac/"+stg, "main.tf", "iac-main-header.tmpl", ll, ll.Overwrite)
 		WriteTerraformStageMain(fldr)
 	}
 }
