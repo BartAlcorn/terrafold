@@ -6,8 +6,12 @@ build: getvars
 	@echo "Building ${PROJECT}-$(TRIGGER) v${VERSION}"
 	GOARCH=amd64 GOOS=linux go build -v -ldflags="-X ${APPNAME} -X ${APPVERS} -X ${APPBUILDER}" -o ./bin ./main.go
 	@echo "Dockerizing ${PROJECT} v${VERSION}"
+	cp -r ../../../../stash ./stash
+	cp ../../../../cstore.yml ./cstore.yml
 	docker build -t ${PROJECT} .
 	rm ./bin
+	rm -r ./stash
+	rm ./cstore.yml
 
 getvars:
 define GetJQ

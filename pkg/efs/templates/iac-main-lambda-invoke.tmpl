@@ -14,14 +14,6 @@ module "lambdaINVOKE" {
   tags                 = merge(module.constants.tags, { environment = var.environment })
 }
 
-resource "aws_lambda_permission" "allow_invoke_{{.Name}}" {
-  statement_id  = "AllowExecutionFromSNSZeusMetadata"
-  action        = "lambda:InvokeFunction"
-  function_name = module.lambdaINVOKE.lambda_func.function_name
-  principal     = "sns.amazonaws.com"
-  source_arn    = module.sns.sns_arn
-}
-
 data "aws_iam_policy_document" "lambda_invoke_permissions" {
   statement {
     # sid       = "AllowInvokingLambdas"

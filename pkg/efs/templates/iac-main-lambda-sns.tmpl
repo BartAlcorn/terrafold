@@ -31,7 +31,7 @@ resource "aws_sns_topic_subscription" "{{.Name}}_lambda_target" {
 }
 
 resource "aws_lambda_permission" "allow_sns_{{.Name}}" {
-  statement_id  = "AllowExecutionFromSNSZeusMetadata"
+  statement_id  = "AllowExecutionFromSNS"
   action        = "lambda:InvokeFunction"
   function_name = module.lambdaSNS.lambda_func.function_name
   principal     = "sns.amazonaws.com"
@@ -68,22 +68,6 @@ data "aws_iam_policy_document" "lambda_sns_permissions" {
     ]
     resources = [
       module.sns.sns_arn,
-      "arn:aws:sns:us-east-1:277635488776:zeus2-odt-topic-ref",
-      "arn:aws:sns:us-east-1:277635488776:zeus2-odt-topic-prod",
-      "arn:aws:sns:us-east-1:837769064668:odt-${var.environment}-queue_manager_scheduler-sqs"
     ]
   }
-
-  statement {
-    effect = "Allow"
-    actions = [
-      "s3:Get*",
-      "s3:List*",
-    ]
-    resources = [
-      "arn:aws:s3:::odt-common-go-cstore",
-      "arn:aws:s3:::odt-common-go-cstore/*",
-    ]
-  }
-
 }

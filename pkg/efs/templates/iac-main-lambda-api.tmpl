@@ -14,12 +14,20 @@ module "lambdaAPI" {
   tags                 = merge(module.constants.tags, { environment = var.environment })
 }
 
-resource "aws_lambda_permission" "allow_api_{{.Name}}" {
-  statement_id  = "AllowExecutionFromSNSZeusMetadata"
-  action        = "lambda:InvokeFunction"
-  function_name = module.lambdaAPI.lambda_func.function_name
-  principal     = "api.amazonaws.com"
-  source_arn    = module.sns.sns_arn
+### APIGateway =======================================================================
+#this module has references to existing resources needed by the aws_apigateway module
+module "api" {
+  source                   = "github.com/turnercode/cp-awfm-iac/modules/aws_apigateway"
+  app                      = var.app
+  environment              = var.environment
+  api_lambda_arn           = module.lambdaAPI.live_alias.arn
+  api_lambda_invoke_arn    = module.lambdaAPI.live_alias.invoke_arn
+  api_request_parameters   = {}
+  api_parent_resource_path = "v1"
+  api_endpoint_path        = var.app
+  api_request_method       = "POST"
+  tags                     = merge(module.constants.tags, { environment = var.environment })
+  api_key_required         = true
 }
 
 data "aws_iam_policy_document" "lambda_api_permissions" {
