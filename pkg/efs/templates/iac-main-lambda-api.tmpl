@@ -24,7 +24,7 @@ module "api" {
   api_lambda_invoke_arn    = module.lambdaAPI.live_alias.invoke_arn
   api_request_parameters   = {}
   api_parent_resource_path = "v1"
-  api_endpoint_path        = "${var.app}"
+  api_endpoint_path        = var.app
   api_request_method       = "POST"
   tags                     = merge(module.constants.tags, { environment = var.environment })
   api_key_required         = true

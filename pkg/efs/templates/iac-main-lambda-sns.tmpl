@@ -70,17 +70,4 @@ data "aws_iam_policy_document" "lambda_sns_permissions" {
       module.sns.sns_arn,
     ]
   }
-
-  statement {
-    effect = "Allow"
-    actions = [
-      "s3:Get*",
-      "s3:List*",
-    ]
-    resources = [
-      "arn:aws:s3:::odt-common-go-cstore",
-      "arn:aws:s3:::odt-common-go-cstore/*",
-    ]
-  }
-
 }

@@ -49,18 +49,6 @@ data "aws_iam_policy_document" "lambda_sqs_permissions" {
   }
 
   statement {
-    effect = "Allow"
-    actions = [
-      "s3:Get*",
-      "s3:List*",
-    ]
-    resources = [
-      "arn:aws:s3:::odt-common-go-cstore",
-      "arn:aws:s3:::odt-common-go-cstore/*",
-    ]
-  }
-
-  statement {
     # sid = "AllowReceiveSQS"
     effect    = "Allow"
     resources = ["*"]
