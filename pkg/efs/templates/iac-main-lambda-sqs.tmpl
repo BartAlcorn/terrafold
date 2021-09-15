@@ -14,12 +14,16 @@ module "lambdaSQS" {
   tags                 = merge(module.constants.tags, { environment = var.environment })
 }
 
-resource "aws_lambda_permission" "allow_sqs_{{.Name}}" {
-  statement_id  = "AllowExecutionFromSNSZeusMetadata"
-  action        = "lambda:InvokeFunction"
-  function_name = module.lambdaSQS.lambda_func.function_name
-  principal     = "sns.amazonaws.com"
-  source_arn    = module.sns.sns_arn
+### SQS =======================================================================
+module "sqs" {
+  source         = "github.com/turnercode/cp-awfm-iac/modules/aws_sqs"
+  constants      = module.constants
+  app            = var.app
+  environment    = var.environment
+  sqs_queue_name = "${var.environment}-${var.app}"
+  sqs_lambda_arn = module.lambdaSQS.live_alias.arn
+  description    = "'${var.app}' Airing Retriever SQS " #
+  tags           = merge(module.constants.tags, { environment = var.environment })
 }
 
 data "aws_iam_policy_document" "lambda_sqs_permissions" {
@@ -45,20 +49,6 @@ data "aws_iam_policy_document" "lambda_sqs_permissions" {
   }
 
   statement {
-    # sid  = "AllowSNS"
-    effect = "Allow"
-    actions = [
-      "sns:*",
-    ]
-    resources = [
-      module.sns.sns_arn,
-      "arn:aws:sns:us-east-1:277635488776:zeus2-odt-topic-ref",
-      "arn:aws:sns:us-east-1:277635488776:zeus2-odt-topic-prod",
-      "arn:aws:sns:us-east-1:837769064668:odt-${var.environment}-queue_manager_scheduler-sqs"
-    ]
-  }
-
-  statement {
     effect = "Allow"
     actions = [
       "s3:Get*",
@@ -70,4 +60,14 @@ data "aws_iam_policy_document" "lambda_sqs_permissions" {
     ]
   }
 
+  statement {
+    # sid = "AllowReceiveSQS"
+    effect    = "Allow"
+    resources = ["*"]
+    actions = [
+      "sqs:ReceiveMessage",
+      "sqs:GetQueueAttributes",
+      "sqs:DeleteMessage"
+    ]
+  }
 }
