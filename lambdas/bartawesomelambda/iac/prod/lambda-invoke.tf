@@ -1,0 +1,1 @@
+../common/lambda-invoke.tf

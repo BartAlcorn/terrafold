@@ -14,9 +14,9 @@ import (
 func WriteTerraformStageMain(fldr Folder) {
 	for _, t := range fldr.Lambda.Triggers {
 		fldr.Lambda.Trigger = t
-		if _, err := os.Stat(fldr.LPath + "/iac/" + fldr.Lambda.Stage + "/lambda-" + t + ".tf"); os.IsNotExist(err) || fldr.Lambda.Overwrite {
+		if _, err := os.Stat(fldr.LPath + "/iac/common/lambda-" + t + ".tf"); os.IsNotExist(err) || fldr.Lambda.Overwrite {
 
-			f, err := os.Create(fldr.LPath + "/iac/" + fldr.Lambda.Stage + "/lambda-" + t + ".tf")
+			f, err := os.Create(fldr.LPath + "/iac/common/lambda-" + t + ".tf")
 			if err != nil {
 				fmt.Println("ERROR ", err)
 			}
@@ -24,22 +24,7 @@ func WriteTerraformStageMain(fldr Folder) {
 
 			var buff bytes.Buffer
 
-			// // get embedded file
-			// ft, err := efs.GetFile("iac-main-header.tmpl")
-			// if err != nil {
-			// 	fmt.Println("ERROR, Embedded FS: ", err)
-			// }
-
-			// tmp, err := template.New("iacBaseMain").Parse(string(ft))
-			// if err != nil {
-			// 	panic(err)
-			// }
-			// err = tmp.Execute(&buff, fldr.Lambda)
-			// if err != nil {
-			// 	panic(err)
-			// }
-
-			ft, err := efs.GetFile("iac-main-lambda-" + t + ".tmpl")
+			ft, err := efs.GetFile("lambda-" + t + ".tf")
 			if err != nil {
 				fmt.Println("ERROR, Embedded FS: ", err)
 			}
@@ -63,9 +48,9 @@ func WriteTerraformStageMain(fldr Folder) {
 				fmt.Println("ERROR ", err)
 			}
 
-			fmt.Println(chalk.Green.Color("writing  " + fldr.LPath + "/iac/" + fldr.Lambda.Stage + "/lambda-" + t + ".tf"))
+			fmt.Println(chalk.Green.Color("writing  " + fldr.LPath + "/iac/common/lambda-" + t + ".tf"))
 		} else {
-			fmt.Println(chalk.Yellow.Color("skipping " + fldr.LPath + "/iac/" + fldr.Lambda.Stage + "/lambda-" + t + ".tf"))
+			fmt.Println(chalk.Yellow.Color("skipping " + fldr.LPath + "/iac/common/lambda-" + t + ".tf"))
 		}
 	}
 }
