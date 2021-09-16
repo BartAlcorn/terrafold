@@ -27,7 +27,7 @@ func WriteTerraformECR(fldr Folder) {
 		var buff bytes.Buffer
 
 		// get embedded file
-		ft, err := efs.GetFile("iac-main-header.tmpl")
+		ft, err := efs.GetFile("header.tf")
 		if err != nil {
 			fmt.Println("ERROR, Embedded FS: ", err)
 		}
@@ -43,7 +43,7 @@ func WriteTerraformECR(fldr Folder) {
 
 		for _, t := range fldr.Lambda.Triggers {
 			fldr.Lambda.Trigger = t
-			ft, err := efs.GetFile("iac-main-base-ecr.tmpl")
+			ft, err := efs.GetFile("ecr.tf")
 			if err != nil {
 				fmt.Println("ERROR, Embedded FS: ", err)
 			}

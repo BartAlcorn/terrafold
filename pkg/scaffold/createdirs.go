@@ -20,6 +20,11 @@ func CreateDirs(fldr Folder) {
 		fmt.Println("ERROR ", err)
 	}
 
+	err = os.MkdirAll(fldr.LPath+"/iac/common", 0755)
+	if err != nil {
+		fmt.Println("ERROR ", err)
+	}
+
 	for _, s := range fldr.Lambda.Stages {
 		err = os.MkdirAll(fldr.LPath+"/iac/"+s, 0755)
 		if err != nil {
