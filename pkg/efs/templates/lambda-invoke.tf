@@ -10,7 +10,7 @@ module "lambdaINVOKE" {
   handler              = "/var/task/${var.app}"
   lambda_policy        = data.aws_iam_policy_document.lambda_invoke_permissions.json
   lambda_timeout       = 30
-  description          = "example '${var.app}' container deployment"
+  description          = "${var.description} - Invoke Trigger"
   tags                 = merge(module.constants.tags, { environment = var.environment })
 }
 
