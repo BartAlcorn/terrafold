@@ -1,1 +1,0 @@
-../common/lambda-api.tf
