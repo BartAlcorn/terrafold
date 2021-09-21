@@ -23,7 +23,7 @@ func NewProfile(name string) {
 
 	l := Lambda{
 		Name:     name,
-		Triggers: []string{"api", "invoke", "sns", "sqs"},
+		Triggers: []string{"api", "event", "invoke", "sns", "sqs"},
 		Stages:   []string{"dev", "qa", "uat", "prod"},
 	}
 	prfl := Folder{
