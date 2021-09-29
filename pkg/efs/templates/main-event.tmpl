@@ -1,42 +1,67 @@
-package main
+### EVENT Lambda ====================================================================
+module "lambdaEVENT" {
+  source               = "github.com/turnercode/cp-awfm-iac/modules/aws_lambda_container"
+  constants            = module.constants
+  app                  = var.app
+  environment          = var.environment
+  lambda_bucket_name   = module.constants.lambda_bucket_name
+  lambda_function_name = "${var.environment}-${var.app}-event"
+  image_uri            = "${module.constants.aws_account_id}.dkr.ecr.${module.constants.aws_region}.amazonaws.com/hello-world-api:0.0.1"
+  handler              = "/var/task/${var.app}"
+  lambda_policy        = data.aws_iam_policy_document.lambda_event_permissions.json
+  lambda_timeout       = 30
+  description          = var.description
+  tags                 = merge(module.constants.tags, { environment = var.environment })
+}
+data "aws_iam_policy_document" "lambda_event_permissions" {
+  statement {
+    # sid       = "AllowInvokingLambdas"
+    effect    = "Allow"
+    resources = ["arn:aws:lambda:us-east-1:026155191598:function:${var.environment}-${var.app}-event:*"]
+    actions   = ["lambda:*"]
+  }
+  statement {
+    # sid       = "AllowSecretsManager"
+    effect    = "Allow"
+    resources = ["arn:aws:secretsmanager:us-east-1:026155191598:secret:zephyr/configs/*"]
+    actions = [
+      "secretsmanager:GetRandomPassword",
+      "secretsmanager:ListSecrets",
+      "secretsmanager:GetResourcePolicy",
+      "secretsmanager:GetSecretValue",
+      "secretsmanager:DescribeSecret",
+      "secretsmanager:ListSecretVersionIds",
+    ]
+  }
+  statement {
+    # sid = "AllowStateTasks"
+    effect    = "Allow"
+    resources = ["*"]
+    actions = [
+      "states:SendTaskSuccess",
+      "states:ListStateMachines",
+      "states:SendTaskFailure",
+      "states:ListActivities",
+      "states:SendTaskHeartbea"
+    ]
+  }
 
-import (
-	"context"
-	"encoding/json"
-	"fmt"
-	"time"
-
-	"github.com/aws/aws-lambda-go/events"
-	"github.com/aws/aws-lambda-go/lambda"
-	"github.com/turnercode/cp-awfm-common/pkg/version"
-)
-
-func handler(ctx context.Context, event events.CloudWatchEvent) (string, error) {
-	fmt.Println("Event ", event)
-	var response string
-
-	b, err := json.Marshal(event.Detail)
-	if err != nil {
-		fmt.Println("ERROR Marshaling", err)
-	}
-	response = string(b)
-
-	// Fancy Hellow World =======================================================
-	then, err := time.Parse("2006-01-02T15:04:05", "2021-12-31T00:00:00")
-	if err != nil {
-		fmt.Println("ERROR", err)
-	}
-
-	remaining := time.Until(then)
-	resp := fmt.Sprintf("%v days in 2021!!", int(remaining.Hours()/24))
-	fmt.Println("Result:", resp)
-	// End  Fancy Hellow World ==================================================
-
-	return response, err
+  statement {
+    # sid = "AllowStateMachines"
+    effect = "Allow"
+    resources = [
+      "arn:aws:states:*:${module.constants.aws_account_id}:activity:*",
+      "arn:aws:states:*:${module.constants.aws_account_id}:stateMachine:*",
+      "arn:aws:states:*:${module.constants.aws_account_id}:execution:*:*"
+    ]
+    actions = ["states:*"]
+  }
 }
 
-// main
-func main() {
-	version.PrintVersion()
-	lambda.Start(handler)
+resource "aws_lambda_permission" "allow_cloudwatch_to_call_check_foo" {
+    statement_id = "AllowEBToInvokeLambda"
+    action = "lambda:InvokeFunction"
+    function_name = "${var.environment}-${var.app}-event"
+    principal = "events.amazonaws.com"
+    source_arn = "arn:aws:events:us-east-1:026155191598:rule/zephyr-events-${var.environment}/resume-step-function"
 }
