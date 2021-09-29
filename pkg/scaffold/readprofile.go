@@ -31,7 +31,7 @@ func ReadProfile(filename string, prfl Profile) (Folder, error) {
 
 	}
 
-	name := strings.Replace(strings.ToLower(fldr.Lambda.Name), "-", "", -1)
+	name := strings.ToLower(fldr.Lambda.Name)
 	fldr.LPath = name
 	if !IsLambdaDir() {
 		fldr.LPath = "lambdas/" + name

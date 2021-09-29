@@ -10,7 +10,7 @@ module "lambdaEVENT" {
   handler              = "/var/task/${var.app}"
   lambda_policy        = data.aws_iam_policy_document.lambda_event_permissions.json
   lambda_timeout       = 30
-  description          = "example '${var.app}' container deployment"
+  description          = var.description
   tags                 = merge(module.constants.tags, { environment = var.environment })
 }
 
@@ -36,4 +36,21 @@ data "aws_iam_policy_document" "lambda_event_permissions" {
     ]
   }
 
+  statement {
+    sid    = "EB-execute-lambda"
+    effect = "Allow"
+    principals {
+      type        = "Service"
+      identifiers = ["events.amazonaws.com"]
+    }
+    actions   = ["lambda:InvokeFunction"]
+    resources = ["arn:aws:lambda:us-east-1:026155191598:function:${var.environment}-${var.app}-event"]
+    condition {
+      test     = "ArnLike"
+      variable = "aws:SourceArn"
+      values = [
+        "arn:aws:events:us-east-1:026155191598:rule/zephyr-events-${var.environment}/resume-step-function",
+      ]
+    }
+  }
 }

@@ -10,7 +10,7 @@ import (
 // related to the application
 func CreateLambdaDir(fldr Folder) Folder {
 
-	ln := strings.Replace(strings.ToLower(fldr.Lambda.Name), "-", "", -1)
+	ln := strings.ToLower(fldr.Lambda.Name)
 	lpath := "lambdas/" + ln
 
 	fldr.LPath = lpath
