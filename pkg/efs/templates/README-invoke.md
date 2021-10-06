@@ -1,5 +1,7 @@
 # New-Lambda-Invoke
 
+NEW LAMBDA TEMPLATE
+
 The Invoke handler does X, Y, Z.
 
 ## Trigger

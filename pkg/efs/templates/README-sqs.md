@@ -1,5 +1,7 @@
 # New-Lambda-SQS
 
+NEW LAMBDA TEMPLATE
+
 The SQS handler does X, Y, Z.
 
 ## Trigger

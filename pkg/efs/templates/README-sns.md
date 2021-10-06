@@ -1,5 +1,7 @@
 # New-Lambda-SNS
 
+NEW LAMBDA TEMPLATE
+
 The SNS handler does X, Y, Z.
 
 ## Trigger

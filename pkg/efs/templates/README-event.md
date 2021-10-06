@@ -1,5 +1,7 @@
 # New-Lambda-Event
 
+NEW LAMBDA TEMPLATE
+
 The Event handler does X, Y, Z.
 
 ## Trigger

@@ -1,5 +1,7 @@
 # New-Lambda-API
 
+NEW LAMBDA TEMPLATE
+
 The API handler does X, Y, Z.
 
 ## Trigger
