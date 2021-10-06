@@ -16,7 +16,7 @@ func MakeHandlers(fldr Folder) {
 		Make(hpath, "Makefile", "Makefile", fldr.Lambda, fldr.Lambda.Overwrite)
 		Make(hpath, "main.go", "main-"+t+".tmpl", fldr.Lambda, fldr.Lambda.Overwrite)
 		Make(hpath, "package.json", "package.json", fldr.Lambda, fldr.Lambda.Overwrite)
-
+		Make(hpath, "README.md", "README-"+t+".md", fldr.Lambda, fldr.Lambda.Overwrite)
 	}
 	fmt.Println()
 
