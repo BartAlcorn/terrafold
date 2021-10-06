@@ -23,4 +23,5 @@ func Do(filename string) {
 	CreateDirs(fldr)
 	MakeHandlers(fldr)
 	MakeIAC(fldr)
+	Make(fldr.LPath, "README.md", "README-main.md", fldr.Lambda, fldr.Lambda.Overwrite)
 }
