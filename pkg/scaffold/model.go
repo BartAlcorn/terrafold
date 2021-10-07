@@ -10,6 +10,7 @@ type Profile struct {
 type Lambda struct {
 	Name        string     `json:"name"`
 	Description string     `json:"description"`
+	Product     string     `json:"product.omitempty"`
 	Stages      []string   `json:"stages"`
 	Triggers    []string   `json:"triggers"`
 	Triggering  Triggering `json:"triggering"`
