@@ -9,16 +9,15 @@ import (
 )
 
 // newProlifeCmd represents the list command
-var bumpsemverCmd = &cobra.Command{
-	Use:   "bumpsemver",
-	Short: "bumpsemver <name of package.json>",
+var bumppatchCmd = &cobra.Command{
+	Use:   "bumppatch",
+	Short: "bumppatch <name of package.json>",
 	Long: `
-	!!  This command is being depreciated in favor of bumppatch  !!
 	Increments the patch portion of a SemVer in the specified package.json
-	$ terrafold bumpsemver ./package.json`,
+	$ terrafold bumppatch ./package.json`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) != 1 {
-			fmt.Println("usage: terrafold bumpsemver <path to package.json>")
+			fmt.Println("usage: terrafold bumppatch <path to package.json>")
 			return
 		}
 		err := deploy.BumpPatch(args[0])
@@ -29,5 +28,5 @@ var bumpsemverCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(bumpsemverCmd)
+	rootCmd.AddCommand(bumppatchCmd)
 }

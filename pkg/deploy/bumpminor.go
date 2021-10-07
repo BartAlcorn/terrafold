@@ -11,7 +11,8 @@ import (
 
 // BumpPackage searches the named json file,
 // locates the version field and increments sember the patch number.
-func BumpPackage(filename string) error {
+func BumpMinor() error {
+	filename := "./package.json"
 	if _, err := os.Stat(filename); os.IsNotExist(err) {
 		return err
 	}
@@ -30,7 +31,7 @@ func BumpPackage(filename string) error {
 		fmt.Println("ERROR marshaling json", err)
 	}
 
-	p.Version, err = IncrementSemVar(p.Version)
+	p.Version, err = IncrementSemVarMinor(p.Version)
 	if err != nil {
 		fmt.Println("ERROR Incrementing SemVer", err)
 	}

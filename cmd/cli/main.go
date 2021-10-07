@@ -5,7 +5,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-var version = "0.0.0-default"
+var version = "0.0.9"
 
 func main() {
 	viper.Set("version", version)
