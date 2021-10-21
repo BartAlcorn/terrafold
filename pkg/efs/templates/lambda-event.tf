@@ -17,9 +17,9 @@ module "lambdaEVENT" {
 resource "aws_lambda_permission" "allow_eventbridge" {
   statement_id = "AllowEBToInvokeLambda"
   action = "lambda:InvokeFunction"
-  function_name = "${var.product}-${var.environment}-${var.app}-event"
+  function_name = "${var.environment}-${var.app}-event"
   principal = "events.amazonaws.com"
-  source_arn = "arn:aws:events:us-east-1:837769064668:rule/odt-events-${var.environment}/event-rule" # REPLACE WITH ACTUAL EVENT RULE
+  source_arn = "arn:aws:events:us-east-1:837769064668:rule/{PRODUCT}-events-${var.environment}/event-rule" # REPLACE WITH ACTUAL EVENT RULE
 }
 
 data "aws_iam_policy_document" "lambda_event_permissions" {
