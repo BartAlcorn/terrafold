@@ -14,6 +14,14 @@ module "lambdaEVENT" {
   tags                 = merge(module.constants.tags, { environment = var.environment })
 }
 
+resource "aws_lambda_permission" "allow_eventbridge" {
+  statement_id = "AllowEBToInvokeLambda"
+  action = "lambda:InvokeFunction"
+  function_name = "${var.product}-${var.environment}-${var.app}-event"
+  principal = "events.amazonaws.com"
+  source_arn = "arn:aws:events:us-east-1:837769064668:rule/odt-events-${var.environment}/event-rule" # REPLACE WITH ACTUAL EVENT RULE
+}
+
 data "aws_iam_policy_document" "lambda_event_permissions" {
   statement {
     # sid       = "AllowInvokingLambdas"
@@ -34,23 +42,5 @@ data "aws_iam_policy_document" "lambda_event_permissions" {
       "secretsmanager:DescribeSecret",
       "secretsmanager:ListSecretVersionIds",
     ]
-  }
-
-  statement {
-    sid    = "EB-execute-lambda"
-    effect = "Allow"
-    principals {
-      type        = "Service"
-      identifiers = ["events.amazonaws.com"]
-    }
-    actions   = ["lambda:InvokeFunction"]
-    resources = ["arn:aws:lambda:us-east-1:026155191598:function:${var.environment}-${var.app}-event"]
-    condition {
-      test     = "ArnLike"
-      variable = "aws:SourceArn"
-      values = [
-        "arn:aws:events:us-east-1:026155191598:rule/zephyr-events-${var.environment}/resume-step-function",
-      ]
-    }
   }
 }
