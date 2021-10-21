@@ -19,21 +19,21 @@ resource "aws_lambda_permission" "allow_eventbridge" {
   action = "lambda:InvokeFunction"
   function_name = "${var.environment}-${var.app}-event"
   principal = "events.amazonaws.com"
-  source_arn = "arn:aws:events:us-east-1:837769064668:rule/{PRODUCT}-events-${var.environment}/event-rule" # REPLACE WITH ACTUAL EVENT RULE
+  source_arn = "arn:aws:events:${module.constants.aws_region}:${module.constants.aws_account_id}:rule/{PRODUCT}-events-${var.environment}/event-rule" # REPLACE WITH ACTUAL EVENT RULE
 }
 
 data "aws_iam_policy_document" "lambda_event_permissions" {
   statement {
     # sid       = "AllowInvokingLambdas"
     effect    = "Allow"
-    resources = ["arn:aws:lambda:us-east-1:026155191598:function:${var.environment}-${var.app}-event:*"]
+    resources = ["arn:aws:lambda:${module.constants.aws_region}:${module.constants.aws_account_id}:function:${var.environment}-${var.app}-event:*"]
     actions   = ["lambda:*"]
   }
 
   statement {
     # sid       = "AllowSecretsManager"
     effect    = "Allow"
-    resources = ["arn:aws:secretsmanager:us-east-1:026155191598:secret:zephyr/configs/*"]
+    resources = ["arn:aws:secretsmanager:${module.constants.aws_region}:${module.constants.aws_account_id}:secret:zephyr/configs/*"]
     actions = [
       "secretsmanager:GetRandomPassword",
       "secretsmanager:ListSecrets",
