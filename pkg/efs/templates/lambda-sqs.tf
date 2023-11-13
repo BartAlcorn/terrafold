@@ -10,7 +10,7 @@ module "lambdaSQS" {
   handler              = "/var/task/${var.app}"
   lambda_policy        = data.aws_iam_policy_document.lambda_sqs_permissions.json
   lambda_timeout       = 30
-  description          = "example '${var.app}' container deployment"
+  description          = "${var.description} - SQS Trigger"
   tags                 = merge(module.constants.tags, { environment = var.environment })
 }
 
